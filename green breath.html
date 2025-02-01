@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastic Type Lookup</title>
+    <style>
+        body {
+            font-family: 'Gemini', sans-serif; /* Or any font you like */
+            background-color: #121212; /* Dark mode background */
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        #plastic-form {
+            display: flex;
+            flex-direction: column; /* Arrange elements vertically */
+            align-items: center; /* Center horizontally */
+            margin-bottom: 20px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #333; /* Dark mode input background */
+            color: white;
+        }
+        button {
+            background: linear-gradient(45deg, #ff0000, #ff7300, #ffeb00, #47ff00, #00ffee, #0004ff, #7a00ff, #ff00f2);
+            background-size: 300% 300%;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            animation: rgbAnimation 3s infinite linear;
+        }
+
+        @keyframes rgbAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plastic Type Lookup</h1>
+
+    <div id="plastic-form">
+        <label for="plastic-type">Select or Enter Plastic Type:</label>
+        <select id="plastic-type">
+            <option value="PET">PET (Polyethylene Terephthalate)</option>
+            <option value="HDPE">HDPE (High-Density Polyethylene)</option>
+            <option value="PVC">PVC (Polyvinyl Chloride)</option>
+            <option value="LDPE">LDPE (Low-Density Polyethylene)</option>
+            <option value="PP">PP (Polypropylene)</option>
+            <option value="PS">PS (Polystyrene)</option>
+            <option value="OTHER">Other</option>
+            </select>
+        <input type="text" id="other-plastic" placeholder="Specify 'Other' type" style="display: none;"> <br>
+        <button onclick="lookupPlastic()">Lookup</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const plasticData = {  // Store your plastic type data here
+            "PET": {
+                "recyclable": true,
+                "food_safe": true,
+                "disposal": "Recycle"
+            },
+            "HDPE": {
+                "recyclable": true,
+                "food_safe": true,
+                "disposal": "Recycle"
+            },
+            "PVC": {
+                "recyclable": false,
+                "food_safe": false,
+                "disposal": "Avoid recycling, often toxic"
+            },
+            "LDPE": {
+                "recyclable": true,
+                "food_safe": true,
+                "disposal": "Recycle"
+            },
+            "PP": {
+                "recyclable": true,
+                "food_safe": true,
+                "disposal": "Recycle"
+            },
+            "PS": {
+                "recyclable": false,
+                "food_safe": false,
+                "disposal": "Difficult to recycle"
+            },
+            "OTHER": {
+                "recyclable": "Varies",
+                "food_safe": "Varies",
+                "disposal": "Check local guidelines"
+            }
+            // Add more plastic types and their data as needed
+        };
+
+        const plasticSelect = document.getElementById('plastic-type');
+        const otherInput = document.getElementById('other-plastic');
+
+        plasticSelect.addEventListener('change', function() {
+            if (this.value === 'OTHER') {
+                otherInput.style.display = 'block';
+            } else {
+                otherInput.style.display = 'none';
+            }
+        });
+
+
+
+        function lookupPlastic() {
+            const selectedType = document.getElementById('plastic-type').value;
+            const otherTypeValue = document.getElementById('other-plastic').value;
+            const plasticType = selectedType === 'OTHER' ? otherTypeValue : selectedType;
+            const resultDiv = document.getElementById('result');
+
+            if (!plasticType) {
+                alert("Please select or enter a plastic type.");
+                return;
+            }
+
+            const data = plasticData[plasticType.toUpperCase()]; // Case-insensitive lookup
+
+            if (data) {
+                let resultText = `Plastic Type: ${plasticType}<br>`;
+                for (const key in data) {
+                    resultText += `${key.charAt(0).toUpperCase() + key.slice(1).replace("_", " ")}: ${data[key]}<br>`;
+                }
+                resultDiv.innerHTML = resultText;
+            } else {
+                resultDiv.innerText = "Plastic type not found.";
+            }
+        }
+    </script>
+</body>
+</html>
